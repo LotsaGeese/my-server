@@ -1,10 +1,11 @@
-FROM ubuntu:22.04
-
-RUN apt-get update && apt-get install -y dnsmasq && \
-    rm -rf /var/lib/apt/lists/*
+FROM alpine:latest
 
 COPY dnsmasq.conf /etc/dnsmasq.conf
 
-EXPOSE 53/tcp 53/udp
+RUN apk add --no-cache dnsmasq
 
-CMD ["dnsmasq", "-k"]
+EXPOSE 53
+
+ENTRYPOINT [ "/usr/sbin/dnsmasq" ]
+CMD [ "-k" ]
+
