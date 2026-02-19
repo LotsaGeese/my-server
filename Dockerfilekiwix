@@ -13,4 +13,5 @@ USER user
 # COPY the script that is already executable on the host
 COPY ./kiwixstart.sh /usr/local/bin/
 
+
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/kiwixstart.sh"]
