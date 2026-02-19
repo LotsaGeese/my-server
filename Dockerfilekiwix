@@ -1,10 +1,6 @@
-ARG VERSION=latest
-
-# kiwix-tools is multi-arch
-FROM ghcr.io/kiwix/kiwix-tools:$VERSION
+FROM ghcr.io/kiwix/kiwix-tools:latest
 LABEL org.opencontainers.image.source=https://github.com/openzim/kiwix-tools
 
-# expose kiwix-serve default port and workdir
 EXPOSE 8080
 VOLUME /data
 WORKDIR /data
@@ -14,14 +10,7 @@ RUN addgroup -S -g 1001 user && adduser -S -u 1001 user -G user
 RUN chown user:user /data
 USER user
 
-# Create a bin folder in the user's home
-RUN mkdir -p /home/user/bin
+# COPY the script that is already executable on the host
+COPY ./kiwixstart.sh /usr/local/bin/
 
-# Copy script there
-COPY ./kiwixstart.sh /home/user/bin/
-
-# Make it executable
-RUN chmod +x /home/user/bin/kiwixstart.sh
-
-# Set entrypoint
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "/home/user/bin/kiwixstart.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/kiwixstart.sh"]
