@@ -14,10 +14,17 @@ if [ ! -z "$DOWNLOAD" ]; then
     fi
 fi
 
-PORT=${PORT:-7000}
 
-# Execute Kiwix-serve with arguments (wildcards expand properly)
+PORT=${PORT:-8080}
+
+# If no arguments are passed, default to all ZIMs in /data
+if [ "$#" -eq 0 ]; then
+    set -- /data/*.zim
+fi
+
+# Execute Kiwix
 exec /usr/local/bin/kiwix-serve --port="$PORT" "$@"
+
 
 # If Kiwix fails, show /data contents
 if [ $? -ne 0 ]; then
