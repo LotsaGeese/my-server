@@ -1,37 +1,26 @@
 #!/bin/sh
 
-# Download if necessary a file
-if [ ! -z "$DOWNLOAD" ]
-then
-    # Check if /data is writable
-    if [ ! -w /data ]
-    then
-        echo "'/data' directory is not writable by '$(id -n -u):$(id -n -g)' ($(id -u):$(id -g)). ZIM file(s) can not be written."
+# Download ZIM if DOWNLOAD is set
+if [ ! -z "$DOWNLOAD" ]; then
+    if [ ! -w /data ]; then
+        echo "'/data' directory is not writable by '$(id -n -u):$(id -n -g)' ($(id -u):$(id -g))."
         exit 1
     fi
+    ZIM=$(basename "$DOWNLOAD")
+    wget "$DOWNLOAD" -O "/data/$ZIM"
 
-    # Dwonload ZIM file
-    ZIM=`basename $DOWNLOAD`
-    wget $DOWNLOAD -O "$ZIM"
-
-    # Set arguments
-    if [ "$#" -eq "0" ]
-    then
-        set -- "$@" $ZIM
+    if [ "$#" -eq 0 ]; then
+        set -- "$@" "/data/$ZIM"
     fi
 fi
 
-if [ -z "$PORT" ]
-then
-    PORT=8080
-fi
-# Execute with proper argument expansion
+PORT=${PORT:-7000}
+
+# Execute Kiwix-serve with arguments (wildcards expand properly)
 exec /usr/local/bin/kiwix-serve --port="$PORT" "$@"
 
-
-# If error, print the content of /data
-if [ $? -ne 0 ]
-then
+# If Kiwix fails, show /data contents
+if [ $? -ne 0 ]; then
     echo "Here is the content of /data:"
     find /data -type f
 fi
