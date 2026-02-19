@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  dns:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: DockerfileDNS
+    container_name: dns_test
+    restart: unless-stopped
+    networks:
+      dns_net:
+        ipv4_address: 192.168.1.201  # Fixed IP on your LAN
+    # Optional, macvlan already allows host traffic
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+
+networks:
+  dns_net:
+    driver: macvlan
+    driver_opts:
+      parent: enp2s0  # Replace with your host interface
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+          ip_range: 192.168.1.200/29
