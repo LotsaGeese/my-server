@@ -14,3 +14,8 @@ services:
 
 volumes:
   kolibri_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/master/temp/kolibri/data
+      o: bind
