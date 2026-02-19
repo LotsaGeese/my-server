@@ -25,9 +25,9 @@ if [ -z "$PORT" ]
 then
     PORT=8080
 fi
-CMD="/usr/local/bin/kiwix-serve --port=$PORT $@"
-echo $CMD
-$CMD
+# Execute with proper argument expansion
+exec /usr/local/bin/kiwix-serve --port="$PORT" "$@"
+
 
 # If error, print the content of /data
 if [ $? -ne 0 ]
