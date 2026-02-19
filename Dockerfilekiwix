@@ -4,10 +4,11 @@ ARG VERSION=latest
 FROM ghcr.io/kiwix/kiwix-tools:$VERSION
 LABEL org.opencontainers.image.source=https://github.com/openzim/kiwix-tools
 
-
 # running as a named unprivileged user
 RUN addgroup -S -g 1001 user && adduser -S -u 1001 user -G user
-RUN chown user:user /data
+
+# ensure /data exists before changing ownership
+RUN mkdir -p /data && chown user:user /data
 USER user
 
 COPY ./start.sh /usr/local/bin/
