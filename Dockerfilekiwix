@@ -11,6 +11,6 @@ RUN addgroup -S -g 1001 user && adduser -S -u 1001 user -G user
 RUN mkdir -p /data && chown user:user /data
 USER user
 
-COPY ./start.sh /usr/local/bin/
+COPY ./kiwixstart.sh /usr/local/bin/
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/start.sh"]
