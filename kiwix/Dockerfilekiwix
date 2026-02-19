@@ -12,6 +12,9 @@ USER user
 
 # COPY the script that is already executable on the host
 COPY ./kiwix/kiwixstart.sh /usr/local/bin/
-
+# **Set executable inside the image**
+USER root
+RUN chmod +x /usr/local/bin/kiwixstart.sh
+USER user
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/kiwixstart.sh"]
