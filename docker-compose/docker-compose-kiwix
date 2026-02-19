@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  kiwix:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: Dockerfilekiwix
+    container_name: kiwix_test
+    restart: unless-stopped
+    ports:
+      - "7000:8080"
+    volumes:
+      - /home/master/temp/kiwix/zim:/data
+    command:
+      - '*.zim'
