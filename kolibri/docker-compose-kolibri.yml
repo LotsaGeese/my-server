@@ -3,7 +3,7 @@ version: "3.9"
 services:
   kolibri:
     build:
-      context: https://github.com/LotsaGeese/my-server.git#main
+      context: https://github.com/LotsaGeese/my-server/kolibri.git#main
       dockerfile: Dockerfilekolibri
     container_name: kolibri_test
     restart: unless-stopped
