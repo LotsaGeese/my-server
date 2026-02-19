@@ -3,7 +3,7 @@ version: "3.9"
 services:
   kiwix:
     build:
-      context: https://github.com/LotsaGeese/my-server.git#main
+      context: https://github.com/LotsaGeese/my-server/kiwix.git#main
       dockerfile: Dockerfilekiwix
     container_name: kiwix_test
     restart: unless-stopped
