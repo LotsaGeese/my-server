@@ -14,7 +14,14 @@ RUN addgroup -S -g 1001 user && adduser -S -u 1001 user -G user
 RUN chown user:user /data
 USER user
 
-COPY ./kiwixstart.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/kiwixstart.sh
+# Create a bin folder in the user's home
+RUN mkdir -p /home/user/bin
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/kiwixstart.sh"]
+# Copy script there
+COPY ./kiwixstart.sh /home/user/bin/
+
+# Make it executable
+RUN chmod +x /home/user/bin/kiwixstart.sh
+
+# Set entrypoint
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/home/user/bin/kiwixstart.sh"]
