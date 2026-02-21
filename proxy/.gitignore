@@ -1,0 +1,11 @@
+*
+!.gitignore
+!docker-compose.yml
+
+!data/
+!data/www
+!data/www/index.html
+
+!data/nginx
+!data/nginx/proxy-confs
+!data/nginx/proxy-confs/kiwix.subdomain.conf
