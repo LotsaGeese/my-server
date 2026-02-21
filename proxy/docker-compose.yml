@@ -1,9 +1,33 @@
 services:
-  app:
-    image: 'docker.io/jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      - '8443:443'
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Adelaide
+      - URL=hippity.internal   # Use localhost or a local dummy domain
+      - VALIDATION=http
+      - SUBDOMAINS=wildcard # Optional
+      - DEBUG=true
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - ./data:/config
+    ports:
+      - 443:443
+      - 80:80   # Maps container 80 to host 8080
+    restart: unless-stopped
+
+  kiwix:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: kiwix/Dockerfilekiwix
+    container_name: kiwix_test
+    restart: unless-stopped
+    volumes:
+      - /home/master/temp/kiwix/zim:/data
+    command:
+      - '*.zim'
+    depends_on:
+      - swag
