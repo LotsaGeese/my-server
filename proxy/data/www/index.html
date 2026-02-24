@@ -1,38 +1,57 @@
 <html>
-    <head>
-        <title>Welcome to your SWAG instance</title>
-        <style>
-        body{
+<head>
+    <title>Welcome to Your SWAG Instance</title>
+    <style>
+        body {
             font-family: Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
         }
-        .message{
-            width:440px;
-            padding:20px 40px;
-            margin:0 auto;
-            background-color:#f9f9f9;
-            border:1px solid #ddd;
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 22px;
             color: #1e3d62;
+            margin-bottom: 20px;
         }
-        center{
-            margin:40px 0;
+        p {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 30px;
         }
-        h1{
-            font-size: 18px;
-            line-height: 26px;
+        .links a {
+            display: inline-block;
+            margin: 10px 15px;
+            padding: 12px 25px;
+            background-color: #cf308b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
-        p{
-            font-size: 12px;
+        .links a:hover {
+            background-color: #a0266b;
         }
-        a{
-            color: rgb(207, 48, 139);
-        }
-        </style>
-    </head>
-    <body>
-        <div class="message">
-            <h1>Welcome to your website instance</h1>
-            <a href="https://kiwix.hippity.internal/#lang=eng">Kiwix</a>
-             <a href="https://kolibri.hippity.internal">Kolibri</a>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your SWAG Instance</h1>
+        <p>Quick links to your installed services:</p>
+        <div class="links">
+            <a href="https://kiwix.hippity.internal/#lang=eng" target="_blank">Kiwix</a>
+            <a href="https://kolibri.hippity.internal" target="_blank">Kolibri</a>
+            <a href="https://moodle.hippity.internal" target="_blank">Moodle</a>
         </div>
-    </body>
+    </div>
+</body>
 </html>

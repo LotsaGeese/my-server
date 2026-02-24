@@ -8,15 +8,15 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Adelaide
-      - URL=hippity.internal   # Use localhost or a local dummy domain
+      - URL=hippity.internal
       - VALIDATION=http
-      - SUBDOMAINS=wildcard # Optional
+      - SUBDOMAINS=wildcard
       - DEBUG=true
     volumes:
       - ./data:/config
     ports:
       - 443:443
-      - 80:80   # Maps container 80 to host 8080
+      - 80:80
     restart: unless-stopped
 
   kolibri:
@@ -27,7 +27,6 @@ services:
     restart: unless-stopped
     volumes:
       - kolibri_data:/kolibri/.kolibri
-  
 
   kiwix:
     build:
@@ -40,6 +39,62 @@ services:
     command:
       - '*.zim'
 
+  moodle_db:
+    image: mariadb:11
+    container_name: moodle_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: moodle
+      MYSQL_USER: moodleuser
+      MYSQL_PASSWORD: moodlepass
+    volumes:
+      - moodle_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
+  moodle:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: moodle/Dockerfilemoodle
+    container_name: moodle
+    restart: unless-stopped
+    depends_on:
+      moodle_db:
+        condition: service_healthy
+    environment:
+      - MOODLE_DB_HOST=moodle_db
+      - MOODLE_DB_NAME=moodle
+      - MOODLE_DB_USER=moodleuser
+      - MOODLE_DB_PASS=moodlepass
+      - MOODLE_FULLNAME=My Moodle Site
+      - MOODLE_SHORTNAME=Moodle
+      - MOODLE_ADMINUSER=admin
+      - MOODLE_ADMINPASS=AdminPass123!
+    volumes:
+      - moodle_data:/var/www/moodledata
+    expose:
+      - 80
+
+  moodle_cron:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: moodle/Dockerfilemoodle
+    container_name: moodle_cron
+    depends_on:
+      - moodle
+    volumes:
+      - moodle_data:/var/moodledata
+    command: >
+      sh -c "while [ ! -f /var/www/moodle/config.php ]; do sleep 5; done;
+             while true; do
+               php /var/www/moodle/admin/cli/cron.php;
+               sleep 60;
+             done"
 volumes:
+  moodle_data:       # Moodle data
+  moodle_db_data:    # Database storage
   kolibri_data:
