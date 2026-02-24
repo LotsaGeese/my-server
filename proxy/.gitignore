@@ -9,3 +9,4 @@
 !data/nginx
 !data/nginx/proxy-confs
 !data/nginx/proxy-confs/kiwix.subdomain.conf
+!data/nginx/proxy-confs/kolibri.subdomain.conf

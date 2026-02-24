@@ -19,6 +19,16 @@ services:
       - 80:80   # Maps container 80 to host 8080
     restart: unless-stopped
 
+  kolibri:
+    build:
+      context: https://github.com/LotsaGeese/my-server.git#main
+      dockerfile: kolibri/Dockerfilekolibri
+    container_name: kolibri_test
+    restart: unless-stopped
+    volumes:
+      - kolibri_data:/kolibri/.kolibri
+  
+
   kiwix:
     build:
       context: https://github.com/LotsaGeese/my-server.git#main
@@ -29,5 +39,7 @@ services:
       - /home/master/temp/kiwix/zim:/data
     command:
       - '*.zim'
-    depends_on:
-      - swag
+
+
+volumes:
+  kolibri_data:
