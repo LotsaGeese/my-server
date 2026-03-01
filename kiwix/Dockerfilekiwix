@@ -11,7 +11,7 @@ RUN chown user:user /data
 USER user
 
 # COPY the script that is already executable on the host
-COPY ./kiwix/kiwixstart.sh /usr/local/bin/
+COPY kiwixstart.sh /usr/local/bin/
 # **Set executable inside the image**
 USER root
 RUN chmod +x /usr/local/bin/kiwixstart.sh

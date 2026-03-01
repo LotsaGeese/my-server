@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-COPY DNS/dnsmasq.conf /etc/dnsmasq.conf
+COPY dnsmasq.conf /etc/dnsmasq.conf
 
 RUN apk add --no-cache dnsmasq
 

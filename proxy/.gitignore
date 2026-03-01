@@ -1,6 +1,8 @@
 *
 !.gitignore
-!docker-compose.yml
+!../docker-compose.yml
+
+!../moodle/my_custom.cnf
 
 !data/
 !data/www
