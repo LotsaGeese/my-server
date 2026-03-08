@@ -1,8 +1,21 @@
 *
 !.gitignore
-!../docker-compose.yml
+!.docker-compose.yml
+!.setup_certs.sh
+!.moodle/my_custom.cnf
 
-!../moodle/my_custom.cnf
+!./DNS
+!./DNS/dnsmasq.conf
+!./DNS/DockerfileDNS
+
+!./kiwix
+!./kiwix/DockerFilekiwix
+
+!./kolibri
+!./kolibri/Dockerfilekolibri
+
+!./moodle
+!./moodle/my_custom.cnf
 
 !data/
 !data/www
