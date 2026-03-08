@@ -23,6 +23,8 @@
 !proxy/data
 !proxy/data/www
 !proxy/data/www/index.html
+!proxy/data/www/fonts/
+!proxy/data/www/fonts/*
 
 !proxy
 !proxy/data/

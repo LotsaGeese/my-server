@@ -12,6 +12,12 @@ services:
     networks:
       dns_net:
         ipv4_address: 192.168.0.201
+    healthcheck:
+      test: ["CMD", "nslookup", "hippity.internal", "127.0.0.1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   swag:
     image: lscr.io/linuxserver/swag:latest
@@ -31,6 +37,12 @@ services:
       - 443:443
       - 80:80
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "https://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     
     networks:
       - internal
@@ -41,12 +53,12 @@ services:
       dockerfile: Dockerfilekolibri
     container_name: kolibri_test
     restart: unless-stopped
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://127.0.0.1:8080"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 40s # Allows time for initial migration/startup
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s # Allows time for initial migration/startup
     volumes:
       - kolibri_data:/kolibri/.kolibri
     networks:
@@ -62,12 +74,12 @@ services:
       - /home/master/temp/kiwix/zim:/data
     command:
       - '*.zim'
-    # healthcheck:
-    #   test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/", "||", "exit", "1"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 20s
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
     networks:
       - internal
 
@@ -83,11 +95,11 @@ services:
     volumes:
       - mariadb_data:/bitnami/mariadb
       - ./moodle/my_custom.cnf:/opt/bitnami/mariadb/conf/my_custom.cnf
-    # healthcheck:
-    #   test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
-    #   interval: 15s
-    #   timeout: 5s
-    #   retries: 6
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/mariadb/bin/mariadb-admin", "ping", "-u", "bn_moodle", "-pbitnami", "-h", "127.0.0.1", "--ssl=FALSE"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
     networks:
       - internal
 
@@ -107,12 +119,12 @@ services:
       - MOODLE_REVERSEPROXY=yes
       - MOODLE_SSLPROXY=yes
       - MOODLE_HOST=moodle.hippity.internal:443
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "https://localhost/"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 15s
+    healthcheck:
+      test: ["CMD", "php", "/opt/bitnami/moodle/admin/cli/checks.php"]
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 300s
     depends_on:
       - moodle_db
     networks:
