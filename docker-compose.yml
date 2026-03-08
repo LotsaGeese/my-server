@@ -31,6 +31,9 @@ services:
       - 443:443
       - 80:80
     restart: unless-stopped
+    
+    networks:
+      - internal
 
   kolibri:
     build:
