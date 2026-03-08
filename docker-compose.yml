@@ -9,9 +9,7 @@ services:
         - PGID=1000
         - TZ=Australia/Adelaide
         - URL=hippity.internal
-        - VALIDATION=http
-        - SUBDOMAINS=wildcard
-        - DEBUG=true
+        - VALIDATION=none
         - CERTPROVIDER=selfsigned
       volumes:
         - ./proxy/data:/config
@@ -19,6 +17,25 @@ services:
         - 443:443
         - 80:80
       restart: unless-stopped
+      networks:
+      - internal
+  
+  dns:
+    build: 
+      context: .
+      dockerfile: ./DNS/DockerfileDNS
+    container_name: dns_test
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - /home/master/temp/DNS:/data
+    networks:
+      dns_net:
+        ipv4_address: 192.168.1.201
+
+
 
   kolibri:
     build:
@@ -28,6 +45,8 @@ services:
     restart: unless-stopped
     volumes:
       - kolibri_data:/kolibri/.kolibri
+    networks:
+      - internal
 
   kiwix:
     build:
@@ -39,62 +58,8 @@ services:
       - /home/master/temp/kiwix/zim:/data
     command:
       - '*.zim'
-
-  #moodle_db:
-  #  image: mariadb:11
-  #  container_name: moodle_db
-  #  restart: unless-stopped
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: rootpassword
-  #    MYSQL_DATABASE: moodle
-  #    MYSQL_USER: moodleuser
-  #    MYSQL_PASSWORD: moodlepass
-  #  volumes:
-  #    - moodle_db_data:/var/lib/mysql
-  #  healthcheck:
-  #    test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-prootpassword"]
-  #    interval: 5s
-  #    timeout: 5s
-  #    retries: 5
-#
-  #moodle:
-  #  build:
-  #    context: ./moodle
-  #    dockerfile: Dockerfilemoodle
-  #  container_name: moodle
-  #  restart: unless-stopped
-  #  depends_on:
-  #    moodle_db:
-  #      condition: service_healthy
-  #  environment:
-  #    - MOODLE_DB_HOST=moodle_db
-  #    - MOODLE_DB_NAME=moodle
-  #    - MOODLE_DB_USER=moodleuser
-  #    - MOODLE_DB_PASS=moodlepass
-  #    - MOODLE_FULLNAME=My Moodle Site
-  #    - MOODLE_SHORTNAME=Moodle
-  #    - MOODLE_ADMINUSER=admin
-  #    - MOODLE_ADMINPASS=AdminPass123!
-  #  volumes:
-  #    - moodle_data:/var/www/moodledata
-  #  expose:
-  #    - 80
-#
-  #moodle_cron:
-  #  build:
-  #    context: ./moodle
-  #    dockerfile: Dockerfilemoodle
-  #  container_name: moodle_cron
-  #  depends_on:
-  #    - moodle
-  #  volumes:
-  #    - moodle_data:/var/www/moodledata
-  #  command: >
-  #    sh -c "while [ ! -f /var/www/moodle/config.php ]; do sleep 5; done;
-  #           while true; do
-  #             php /var/www/moodle/admin/cli/cron.php;
-  #             sleep 60;
-  #           done"
+    networks:
+      - internal
   moodle_db:
     image: docker.io/bitnami/mariadb:latest
     container_name: moodle_db_test
@@ -107,6 +72,8 @@ services:
     volumes:
       - mariadb_data:/bitnami/mariadb
       - ./moodle/my_custom.cnf:/opt/bitnami/mariadb/conf/my_custom.cnf
+    networks:
+      - internal
 
   moodle:
     image: docker.io/bitnami/moodle:latest
@@ -126,9 +93,9 @@ services:
       - MOODLE_HOST=moodle.hippity.internal:443
     depends_on:
       - moodle_db
-    ports:
-      - 8080:8080
-      - 8443:8443
+    networks:
+      - internal
+
 
     # entrypoint: ["tail", "-f", "/dev/null"]
     volumes:
@@ -144,3 +111,18 @@ volumes:
 
   moodle_db_data:    # Database storage
   kolibri_data:
+
+
+networks:
+  dns_net:
+    driver: macvlan
+    driver_opts:
+      parent: enp2s0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+          ip_range: 192.168.1.200/29
+
+  internal:
+    driver: bridge
