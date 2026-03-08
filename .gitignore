@@ -1,28 +1,33 @@
 *
 !.gitignore
-!.docker-compose.yml
-!.setup_certs.sh
-!.moodle/my_custom.cnf
+!docker-compose.yml
+!TODO:.md
+!setup_certs.sh
+!moodle/my_custom.cnf
 
-!./DNS
-!./DNS/dnsmasq.conf
-!./DNS/DockerfileDNS
+!DNS
+!DNS/dnsmasq.conf
+!DNS/DockerfileDNS
 
-!./kiwix
-!./kiwix/DockerFilekiwix
+!kiwix
+!kiwix/Dockerfilekiwix
+!kiwix/kiwixstart.sh
 
-!./kolibri
-!./kolibri/Dockerfilekolibri
+!kolibri
+!kolibri/Dockerfilekolibri
 
-!./moodle
-!./moodle/my_custom.cnf
+!moodle
+!moodle/my_custom.cnf
 
-!data/
-!data/www
-!data/www/index.html
+!proxy
+!proxy/data
+!proxy/data/www
+!proxy/data/www/index.html
 
-!data/nginx
-!data/nginx/proxy-confs
-!data/nginx/proxy-confs/kiwix.subdomain.conf
-!data/nginx/proxy-confs/kolibri.subdomain.conf
-!data/nginx/proxy-confs/moodle.subdomain.conf
+!proxy
+!proxy/data/
+!proxy/data/nginx
+!proxy/data/nginx/proxy-confs
+!proxy/data/nginx/proxy-confs/kiwix.subdomain.conf
+!proxy/data/nginx/proxy-confs/kolibri.subdomain.conf
+!proxy/data/nginx/proxy-confs/moodle.subdomain.conf

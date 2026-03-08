@@ -1,0 +1,141 @@
+services:
+
+  dns:
+    build: 
+      context: .
+      dockerfile: ./DNS/DockerfileDNS
+    container_name: dns_test
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    networks:
+      dns_net:
+        ipv4_address: 192.168.0.201
+
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Adelaide
+      - URL=hippity.internal
+      - VALIDATION=manual
+      #- CERTPROVIDER=selfsigned   # keep this so SWAG doesn't try to reach out
+    volumes:
+      - ./proxy/data:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+
+  kolibri:
+    build:
+      context: ./kolibri
+      dockerfile: Dockerfilekolibri
+    container_name: kolibri_test
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://127.0.0.1:8080"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s # Allows time for initial migration/startup
+    volumes:
+      - kolibri_data:/kolibri/.kolibri
+    networks:
+      - internal
+
+  kiwix:
+    build:
+      context: ./kiwix
+      dockerfile: Dockerfilekiwix
+    container_name: kiwix_test
+    restart: unless-stopped
+    volumes:
+      - /home/master/temp/kiwix/zim:/data
+    command:
+      - '*.zim'
+    # healthcheck:
+    #   test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/", "||", "exit", "1"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 20s
+    networks:
+      - internal
+
+  moodle_db:
+    image: docker.io/bitnami/mariadb:latest
+    container_name: moodle_db_test
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_moodle
+      - MARIADB_PASSWORD=bitnami
+      - MARIADB_DATABASE=bitnami_moodle
+    restart: unless-stopped
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+      - ./moodle/my_custom.cnf:/opt/bitnami/mariadb/conf/my_custom.cnf
+    # healthcheck:
+    #   test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 6
+    networks:
+      - internal
+
+  moodle:
+    image: docker.io/bitnami/moodle:latest
+    container_name: moodle_test
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_PASSWORD=bitnami
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_HOST=moodle_db
+      - BITNAMI_DEBUG=true   
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=Admin123!
+      - MOODLE_REVERSEPROXY=yes
+      - MOODLE_SSLPROXY=yes
+      - MOODLE_HOST=moodle.hippity.internal:443
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "https://localhost/"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 15s
+    depends_on:
+      - moodle_db
+    networks:
+      - internal
+    volumes:
+      - moodle_data:/bitnami/moodle
+      - moodledata_data:/bitnami/moodledata
+
+volumes:
+  moodle_data:       # Moodle data
+  moodledata_data:
+  mariadb_data:
+
+  moodle_db_data:    # Database storage
+  kolibri_data:
+
+networks:
+  dns_net:
+    driver: macvlan
+    driver_opts:
+      parent: enp2s0
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24 # 255.255.255.0
+          gateway: 192.168.0.1
+          ip_range: 192.168.0.200/29
+
+  internal:
+    driver: bridge

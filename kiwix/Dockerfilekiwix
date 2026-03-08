@@ -1,0 +1,20 @@
+FROM ghcr.io/kiwix/kiwix-tools:latest
+LABEL org.opencontainers.image.source=https://github.com/openzim/kiwix-tools
+
+EXPOSE 8080
+VOLUME /data
+WORKDIR /data
+
+# running as a named unprivileged user
+RUN addgroup -S -g 1001 user && adduser -S -u 1001 user -G user
+RUN chown user:user /data
+USER user
+
+# COPY the script that is already executable on the host
+COPY kiwixstart.sh /usr/local/bin/
+# **Set executable inside the image**
+USER root
+RUN chmod +x /usr/local/bin/kiwixstart.sh
+USER user
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/local/bin/kiwixstart.sh"]

@@ -1,0 +1,11 @@
+FROM alpine:latest
+
+COPY DNS/dnsmasq.conf /etc/dnsmasq.conf
+
+RUN apk add --no-cache dnsmasq
+
+EXPOSE 53
+
+ENTRYPOINT [ "dnsmasq" ]
+CMD [ "-k" ]
+
