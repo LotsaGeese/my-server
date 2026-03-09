@@ -1,9 +1,10 @@
 services:
 
   dns:
-    build: 
-      context: .
-      dockerfile: ./DNS/DockerfileDNS
+    image: my-server-dns
+    #build: #Use this if its needed to rebuild the image, however a connection to the wifi is needed that doesn't route through this dns
+    #  context: .
+    #  dockerfile: ./DNS/DockerfileDNS
     container_name: dns_test
     restart: unless-stopped
     ports:
