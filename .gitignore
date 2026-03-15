@@ -3,6 +3,10 @@
 !docker-compose.yml
 !TODO:.md
 !setup_certs.sh
+!Fix_internal_networking.sh
+!setup-usb-automount.sh
+!.env.example
+
 !moodle/my_custom.cnf
 
 !DNS
@@ -12,6 +16,7 @@
 !kiwix
 !kiwix/Dockerfilekiwix
 !kiwix/kiwixstart.sh
+!kiwix/zim
 
 !kolibri
 !kolibri/Dockerfilekolibri
@@ -33,3 +38,4 @@
 !proxy/data/nginx/proxy-confs/kiwix.subdomain.conf
 !proxy/data/nginx/proxy-confs/kolibri.subdomain.conf
 !proxy/data/nginx/proxy-confs/moodle.subdomain.conf
+!proxy/data/nginx/proxy-confs/portainer.subdomain.conf

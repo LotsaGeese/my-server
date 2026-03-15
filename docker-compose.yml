@@ -12,7 +12,7 @@ services:
       - "53:53/udp"
     networks:
       dns_net:
-        ipv4_address: 192.168.0.201
+        ipv4_address: ${DNS_IP}
     healthcheck:
       test: ["CMD", "nslookup", "hippity.internal", "127.0.0.1"]
       interval: 30s
@@ -26,10 +26,10 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Australia/Adelaide
-      - URL=hippity.internal
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - URL=${DOMAIN}
       - VALIDATION=manual
       #- CERTPROVIDER=selfsigned   # keep this so SWAG doesn't try to reach out
     volumes:
@@ -47,6 +47,19 @@ services:
     
     networks:
       - internal
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:sts
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - 9443:9443
+      - 8000:8000 # Optional, for Edge Agents
+    networks:
+      - internal
+
 
   kolibri:
     build:
@@ -62,6 +75,8 @@ services:
       start_period: 40s # Allows time for initial migration/startup
     volumes:
       - kolibri_data:/kolibri/.kolibri
+      - /mnt/usb-drives:/mnt/usb-drives:slave
+    privileged: true
     networks:
       - internal
 
@@ -72,7 +87,7 @@ services:
     container_name: kiwix_test
     restart: unless-stopped
     volumes:
-      - /home/master/temp/kiwix/zim:/data
+      - ./kiwix/zim:/data
     command:
       - '*.zim'
     healthcheck:
@@ -89,9 +104,9 @@ services:
     container_name: moodle_db_test
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_moodle
-      - MARIADB_PASSWORD=bitnami
-      - MARIADB_DATABASE=bitnami_moodle
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
     restart: unless-stopped
     volumes:
       - mariadb_data:/bitnami/mariadb
@@ -110,16 +125,16 @@ services:
     restart: unless-stopped
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - MOODLE_DATABASE_USER=bn_moodle
-      - MOODLE_DATABASE_PASSWORD=bitnami
-      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_USER=${MARIADB_USER}
+      - MOODLE_DATABASE_PASSWORD=${MARIADB_PASSWORD}
+      - MOODLE_DATABASE_NAME=${MARIADB_DATABASE}
       - MOODLE_DATABASE_HOST=moodle_db
-      - BITNAMI_DEBUG=true   
-      - MOODLE_USERNAME=admin
-      - MOODLE_PASSWORD=Admin123!
+      - BITNAMI_DEBUG=true
+      - MOODLE_USERNAME=${MOODLE_USERNAME}
+      - MOODLE_PASSWORD=${MOODLE_PASSWORD}
       - MOODLE_REVERSEPROXY=yes
       - MOODLE_SSLPROXY=yes
-      - MOODLE_HOST=moodle.hippity.internal:443
+      - MOODLE_HOST=${MOODLE_HOST}
     healthcheck:
       test: ["CMD", "php", "/opt/bitnami/moodle/admin/cli/checks.php"]
       interval: 60s
@@ -133,6 +148,7 @@ services:
     volumes:
       - moodle_data:/bitnami/moodle
       - moodledata_data:/bitnami/moodledata
+      - /mnt/usb-drives:/mnt/usb-drives:slave
 
 volumes:
   moodle_data:       # Moodle data
@@ -141,17 +157,18 @@ volumes:
 
   moodle_db_data:    # Database storage
   kolibri_data:
+  portainer_data:
+    name: portainer_data
 
 networks:
   dns_net:
     driver: macvlan
     driver_opts:
-      parent: enp2s0
+      parent: ${PARENT_INTERFACE}
     ipam:
       config:
-        - subnet: 192.168.0.0/24 # 255.255.255.0
-          gateway: 192.168.0.1
-          ip_range: 192.168.0.200/29
-
+        - subnet: ${SUBNET}
+          gateway: ${GATEWAY}
+          ip_range: ${IP_RANGE}
   internal:
     driver: bridge
