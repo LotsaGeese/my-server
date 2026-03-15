@@ -1,40 +1,36 @@
 *
 !.gitignore
 !docker-compose.yml
-!TODO:.md
-!setup_certs.sh
-!Fix_internal_networking.sh
-!setup-usb-automount.sh
 !.env.example
 
-!moodle/my_custom.cnf
+!scripts/
+!scripts/setup_certs.sh
+!scripts/Fix_internal_networking.sh
+!scripts/setup-usb-automount.sh
 
-!DNS
+!DNS/
 !DNS/dnsmasq.conf
 !DNS/DockerfileDNS
 
-!kiwix
+!kiwix/
 !kiwix/Dockerfilekiwix
 !kiwix/kiwixstart.sh
-!kiwix/zim
+!kiwix/zim/
 
-!kolibri
+!kolibri/
 !kolibri/Dockerfilekolibri
 
-!moodle
+!moodle/
 !moodle/my_custom.cnf
 
-!proxy
-!proxy/data
-!proxy/data/www
+!proxy/
+!proxy/data/
+!proxy/data/www/
 !proxy/data/www/index.html
 !proxy/data/www/fonts/
 !proxy/data/www/fonts/*
-
-!proxy
-!proxy/data/
-!proxy/data/nginx
-!proxy/data/nginx/proxy-confs
+!proxy/data/nginx/
+!proxy/data/nginx/proxy-confs/
 !proxy/data/nginx/proxy-confs/kiwix.subdomain.conf
 !proxy/data/nginx/proxy-confs/kolibri.subdomain.conf
 !proxy/data/nginx/proxy-confs/moodle.subdomain.conf
