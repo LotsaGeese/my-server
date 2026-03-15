@@ -285,7 +285,7 @@ Copy `.env.example` to `.env` and fill in the values below.
 | Kiwix | `https://kiwix.hippity.internal` |
 | Portainer (admin) | `https://portainer.hippity.internal` |
 
-Browsers will show a certificate warning until `hippityCA.pem` is installed as a trusted CA on that device — see below.
+Browsers will show a certificate warning on first visit. Click **Advanced > Proceed** (or equivalent in your browser) to continue. This is expected and safe — the server uses a self-signed certificate that browsers don't recognise by default.
 
 ---
 
@@ -339,8 +339,6 @@ docker compose ps
 - Confirm the drive is mounted: `ls /mnt/usb-drives`
 
 **Browser certificate warning**
-- You need to install `hippityCA.pem` as a trusted certificate authority on each device
-- Windows: double-click the file > Install Certificate > place in "Trusted Root Certification Authorities"
-- macOS: double-click to add to Keychain, then open Keychain Access and set it to "Always Trust"
-- Android / iOS: Settings > Security > Install Certificate
-- Linux: import via browser settings, or run `sudo cp hippityCA.pem /usr/local/share/ca-certificates/hippityCA.crt && sudo update-ca-certificates`
+- This is expected — click **Advanced > Proceed** (Chrome/Edge), **Advanced > Accept the Risk and Continue** (Firefox), or the equivalent in your browser to get past it.
+- The warning appears because the certificate is self-signed. The connection is still encrypted and the server is local — it is safe to proceed.
+- There is a way to stop this permanently, however it requires installing the `hippityCA.pem` onto each students device
