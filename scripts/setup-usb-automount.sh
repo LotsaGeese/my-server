@@ -8,16 +8,13 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 echo "==> Cleaning up any previous installation..."
-# Stop any running usb-mount services
 systemctl stop 'usb-mount@*' 2>/dev/null || true
-# Unmount anything currently mounted in usb-drives
 if [ -d /mnt/usb-drives ]; then
     for mount_point in /mnt/usb-drives/*/; do
         umount -l "$mount_point" 2>/dev/null || true
         rmdir "$mount_point" 2>/dev/null || true
     done
 fi
-# Remove old files if they exist
 rm -f /usr/local/bin/usb-mount.sh
 rm -f /etc/udev/rules.d/99-usb-automount.rules
 rm -f /etc/systemd/system/usb-mount@.service
@@ -35,18 +32,28 @@ MOUNT_BASE="/mnt/usb-drives"
 
 log() { logger -t usb-mount "$*"; echo "[usb-mount] $(date '+%H:%M:%S') $*"; }
 
-SKIP_LABELS="Recovery recovery RECOVERY WinRE System EFI"
+# Internal RAID drives to always skip
+SKIP_DEVS="sda sdb sdc"
 
 should_skip() {
+    # Skip if it's one of the RAID member drives
+    local base
+    base=$(echo "$DEVNAME" | sed 's/[0-9]*$//')
+    for skip in $SKIP_DEVS; do
+        if [ "$base" = "$skip" ]; then
+            log "Skipping $DEV — RAID member drive"
+            return 0
+        fi
+    done
+
+    # Skip system/EFI partition labels
     local label
     label=$(blkid -s LABEL -o value "$DEV" 2>/dev/null || echo "")
-    local type
-    type=$(blkid -s TYPE -o value "$DEV" 2>/dev/null || echo "")
-
     if echo "$label" | grep -qiE "^(Recovery|WinRE|System|EFI)$"; then
         log "Skipping $DEV — system partition (label='$label')"
         return 0
     fi
+
     return 1
 }
 
@@ -55,7 +62,7 @@ case "$ACTION" in
         should_skip && exit 0
 
         # Wait for device to settle
-        sleep 1
+        sleep 2
 
         label=$(blkid -s LABEL -o value "$DEV" 2>/dev/null)
         [ -z "$label" ] && label="$DEVNAME"
@@ -98,10 +105,11 @@ echo "    ✓ /usr/local/bin/usb-mount.sh"
 
 echo "==> Writing udev rule..."
 cat > /etc/udev/rules.d/99-usb-automount.rules << 'EOF'
-ACTION=="add", SUBSYSTEM=="block", KERNEL=="sd[b-z][0-9]", ENV{ID_BUS}=="usb", \
+# Match any block device partition that isn't the RAID drives (sda/sdb/sdc)
+ACTION=="add", SUBSYSTEM=="block", KERNEL=="sd[d-z][0-9]", \
     TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-mount@%k.service"
 
-ACTION=="remove", SUBSYSTEM=="block", KERNEL=="sd[b-z][0-9]", ENV{ID_BUS}=="usb", \
+ACTION=="remove", SUBSYSTEM=="block", KERNEL=="sd[d-z][0-9]", \
     RUN+="/bin/systemctl stop usb-mount@%k.service"
 EOF
 echo "    ✓ /etc/udev/rules.d/99-usb-automount.rules"
@@ -132,6 +140,17 @@ udevadm control --reload-rules
 udevadm trigger
 systemctl daemon-reload
 
+# Mount any already-connected drives (like sdd1)
+echo "==> Checking for already connected drives..."
+for dev in /dev/sd[d-z][0-9]; do
+    [ -b "$dev" ] || continue
+    devname=$(basename "$dev")
+    echo "    Found $dev — triggering mount..."
+    /usr/local/bin/usb-mount.sh add "$devname"
+done
+
 echo ""
 echo "==> Done! USB drives will now auto-mount to /mnt/usb-drives/<label>"
+echo "    Currently mounted:"
+ls /mnt/usb-drives/ 2>/dev/null || echo "    (none yet)"
 echo "    Check logs with: journalctl -t usb-mount -f"

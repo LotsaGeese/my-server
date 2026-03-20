@@ -42,10 +42,15 @@
             --border: #252828;
             --text: #e8e4dc;
             --muted: #6b6b6b;
-            --accent-moodle: #f97316;
-            --accent-kiwix: #22c55e;
-            --accent-kolibri: #3b82f6;
         }
+
+        /* Accent palette — add more as needed */
+        .app-card[data-accent="moodle"]      { --accent: #f97316; }
+        .app-card[data-accent="kiwix"]       { --accent: #22c55e; }
+        .app-card[data-accent="kolibri"]     { --accent: #3b82f6; }
+        .app-card[data-accent="filebrowser"] { --accent: #a855f7; }
+        /* Fallback for any unlisted accent */
+        .app-card                            { --accent: #94a3b8; }
 
         * {
             margin: 0;
@@ -141,9 +146,16 @@
             animation: fadeUp 0.6s ease both;
         }
 
-        .app-card:nth-child(1) { animation-delay: 0.1s; }
-        .app-card:nth-child(2) { animation-delay: 0.2s; }
-        .app-card:nth-child(3) { animation-delay: 0.3s; }
+        /* Stagger animation for any number of children */
+        .app-card:nth-child(1)  { animation-delay: 0.10s; }
+        .app-card:nth-child(2)  { animation-delay: 0.18s; }
+        .app-card:nth-child(3)  { animation-delay: 0.26s; }
+        .app-card:nth-child(4)  { animation-delay: 0.34s; }
+        .app-card:nth-child(5)  { animation-delay: 0.42s; }
+        .app-card:nth-child(6)  { animation-delay: 0.50s; }
+        .app-card:nth-child(7)  { animation-delay: 0.58s; }
+        .app-card:nth-child(8)  { animation-delay: 0.66s; }
+        .app-card:nth-child(n+9){ animation-delay: 0.70s; }
 
         .app-card::before {
             content: '';
@@ -169,10 +181,6 @@
             transform: translateX(4px);
             opacity: 1;
         }
-
-        .app-card[data-accent="moodle"] { --accent: var(--accent-moodle); }
-        .app-card[data-accent="kiwix"]  { --accent: var(--accent-kiwix); }
-        .app-card[data-accent="kolibri"]{ --accent: var(--accent-kolibri); }
 
         .icon {
             width: 42px;
@@ -235,7 +243,7 @@
             color: var(--muted);
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            animation: fadeUp 0.6s 0.4s ease both;
+            animation: fadeUp 0.6s 0.5s ease both;
         }
 
         @keyframes fadeUp {
@@ -291,6 +299,18 @@
                 </div>
                 <div class="app-meta">
                     <span class="tag">Education</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <a href="https://filebrowser.hippity.internal" class="app-card" data-accent="filebrowser">
+                <div class="icon">📁</div>
+                <div class="app-info">
+                    <div class="app-name">File Browser</div>
+                    <div class="app-desc">Browse and manage files</div>
+                </div>
+                <div class="app-meta">
+                    <span class="tag">Files</span>
                     <span class="arrow">→</span>
                 </div>
             </a>

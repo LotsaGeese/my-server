@@ -36,3 +36,6 @@
 !proxy/data/nginx/proxy-confs/kolibri.subdomain.conf
 !proxy/data/nginx/proxy-confs/moodle.subdomain.conf
 !proxy/data/nginx/proxy-confs/portainer.subdomain.conf
+
+!filebrowser/
+!filebrowser/init-users.sh

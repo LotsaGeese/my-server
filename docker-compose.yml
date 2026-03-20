@@ -150,15 +150,42 @@ services:
       - moodledata_data:/bitnami/moodledata
       - /mnt/usb-drives:/mnt/usb-drives:slave
 
-volumes:
-  moodle_data:       # Moodle data
-  moodledata_data:
-  mariadb_data:
 
-  moodle_db_data:    # Database storage
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - filebrowser_data:/srv
+      - filebrowser_db:/database
+      - ./filebrowser/init-users.sh:/custom-cont-init.d/99-init-users.sh
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FB_ADMIN_PASSWORD=${FB_ADMIN_PASSWORD}
+      - FB_STUDENT_PASSWORD=${FB_STUDENT_PASSWORD}
+
+volumes:
+  moodle_data:
+    name: my-server_moodle_data
+    external: true
+  moodledata_data:
+    name: my-server_moodledata_data
+    external: true
+  mariadb_data:
+    name: my-server_mariadb_data
+    external: true
+  moodle_db_data:
   kolibri_data:
+    name: my-server_kolibri_data
+    external: true
   portainer_data:
     name: portainer_data
+    external: true
+  filebrowser_data:
+  filebrowser_db:
 
 networks:
   dns_net:
