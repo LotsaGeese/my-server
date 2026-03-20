@@ -13,6 +13,7 @@ filebrowser users add student ${FB_STUDENT_PASSWORD} --database $DB \
   --perm.rename=false \
   --perm.modify=false \
   --perm.create=false \
-  --perm.execute=false
+  --perm.execute=false \
+  --lockPassword
 
 echo "User setup complete"
