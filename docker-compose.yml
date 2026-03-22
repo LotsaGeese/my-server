@@ -31,7 +31,6 @@ services:
       - TZ=${TZ}
       - URL=${DOMAIN}
       - VALIDATION=manual
-      #- CERTPROVIDER=selfsigned   # keep this so SWAG doesn't try to reach out
     volumes:
       - ./proxy/data:/config
     ports:
@@ -44,19 +43,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    
-    networks:
-      - internal
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:sts
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    ports:
-      - 9443:9443
-      - 8000:8000 # Optional, for Edge Agents
     networks:
       - internal
 
@@ -72,7 +58,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s # Allows time for initial migration/startup
+      start_period: 40s
     volumes:
       - kolibri_data:/kolibri/.kolibri
       - /mnt/usb-drives:/mnt/usb-drives:slave
@@ -87,7 +73,7 @@ services:
     container_name: kiwix_test
     restart: unless-stopped
     volumes:
-      - ./kiwix/zim:/data
+      - kiwix_data:/data
     command:
       - '*.zim'
     healthcheck:
@@ -150,7 +136,6 @@ services:
       - moodledata_data:/bitnami/moodledata
       - /mnt/usb-drives:/mnt/usb-drives:slave
 
-
   filebrowser:
     image: filebrowser/filebrowser:s6
     container_name: filebrowser
@@ -160,6 +145,7 @@ services:
     volumes:
       - filebrowser_data:/srv
       - filebrowser_db:/database
+      - filebrowser_config:/config        #
       - ./filebrowser/init-users.sh:/custom-cont-init.d/99-init-users.sh
     environment:
       - PUID=${PUID}
@@ -168,24 +154,61 @@ services:
       - FB_STUDENT_PASSWORD=${FB_STUDENT_PASSWORD}
 
 volumes:
-  moodle_data:
-    name: my-server_moodle_data
-    external: true
-  moodledata_data:
-    name: my-server_moodledata_data
-    external: true
-  mariadb_data:
-    name: my-server_mariadb_data
-    external: true
-  moodle_db_data:
+  kiwix_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/kiwix
+
   kolibri_data:
-    name: my-server_kolibri_data
-    external: true
-  portainer_data:
-    name: portainer_data
-    external: true
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/kolibri
+
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mariadb
+
+  moodle_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/moodle
+
+  moodledata_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/moodledata
+
   filebrowser_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/filebrowser/srv
+
   filebrowser_db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/filebrowser/db
+  
+  filebrowser_config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/filebrowser/config
 
 networks:
   dns_net:
