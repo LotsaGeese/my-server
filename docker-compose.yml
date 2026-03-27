@@ -73,7 +73,7 @@ services:
     container_name: kiwix_test
     restart: unless-stopped
     volumes:
-      - kiwix_data:/data
+      - kiwix_data:/data:ro #this only needs to be read only
     command:
       - '*.zim'
     healthcheck:
