@@ -4,6 +4,20 @@
 !.env.example
 !README.md
 
+
+!data/
+!data/filebrowser/
+!data/filebrowser/config
+!data/filebrowser/db
+!data/filebrowser/srv
+!data/kiwix/
+!data/kolibri/
+!data/mariadb/
+!data/moodle/
+!data/moodledata/
+
+
+
 !scripts/
 !scripts/setup_certs.sh
 !scripts/Fix_internal_networking.sh
@@ -36,6 +50,7 @@
 !proxy/data/nginx/proxy-confs/kolibri.subdomain.conf
 !proxy/data/nginx/proxy-confs/moodle.subdomain.conf
 !proxy/data/nginx/proxy-confs/portainer.subdomain.conf
+!proxy/data/nginx/proxy-confs/filebrowser.subdomain.conf
 
 !filebrowser/
 !filebrowser/init-users.sh
