@@ -4,6 +4,7 @@
 !.env.example
 !README.md
 !.gitkeep
+!start_up.sh
 
 !data/
 !data/filebrowser/
