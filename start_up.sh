@@ -6,7 +6,17 @@
 # ─────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+PROJECT_ROOT="$SCRIPT_DIR"
+SERVER_NAME="hippity.internal"
+
+# Ensure we are running from project root
+if [ "$PWD" != "$PROJECT_ROOT" ]; then
+    echo -e "${BLU}→${NC} Switching to project root: $PROJECT_ROOT"
+    cd "$PROJECT_ROOT" || {
+        echo -e "${RED}✗ Failed to change to project root${NC}"
+        exit 1
+    }
+fi
 
 # Colours
 RED='\033[0;31m'
@@ -25,7 +35,7 @@ info() { echo -e "  ${BLU}→${NC}  $1"; }
 
 # ── Pretty header ────────────────────────────────────────────────
 echo ""
-echo -e "${BLU}  hippity.internal — startup check${NC}"
+echo -e "${BLU}  ${SERVER_NAME} — startup check${NC}"
 echo    "  ──────────────────────────────────"
 echo ""
 

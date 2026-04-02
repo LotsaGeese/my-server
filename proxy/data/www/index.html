@@ -5,45 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hippity.internal</title>
     <style>
-        @font-face {
-            font-family: 'DM Mono';
-            src: url('/fonts/DMMono-Regular.ttf') format('truetype');
-            font-weight: 400;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'DM Mono';
-            src: url('/fonts/DMMono-Medium.ttf') format('truetype');
-            font-weight: 500;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Fraunces';
-            src: url('/fonts/Fraunces-Light.ttf') format('truetype');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Fraunces';
-            src: url('/fonts/Fraunces-SemiBold.ttf') format('truetype');
-            font-weight: 600;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Fraunces';
-            src: url('/fonts/Fraunces-LightItalic.ttf') format('truetype');
-            font-weight: 300;
-            font-style: italic;
-        }
+        @font-face { font-family: 'DM Mono'; src: url('/fonts/DMMono-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; }
+        @font-face { font-family: 'DM Mono'; src: url('/fonts/DMMono-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; }
+        @font-face { font-family: 'Fraunces'; src: url('/fonts/Fraunces-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; }
+        @font-face { font-family: 'Fraunces'; src: url('/fonts/Fraunces-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; }
+        @font-face { font-family: 'Fraunces'; src: url('/fonts/Fraunces-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; }
 
-        :root {
-            --bg: #0e0f0f;
-            --surface: #161818;
-            --border: #252828;
-            --text: #e8e4dc;
-            --muted: #6b6b6b;
-        }
-
+        :root { --bg: #0e0f0f; --surface: #161818; --border: #252828; --text: #e8e4dc; --muted: #6b6b6b; }
         .app-card[data-accent="moodle"]      { --accent: #f97316; }
         .app-card[data-accent="kiwix"]       { --accent: #22c55e; }
         .app-card[data-accent="kolibri"]     { --accent: #3b82f6; }
@@ -51,426 +19,86 @@
         .app-card                            { --accent: #94a3b8; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Mono', monospace;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 720px;
-        }
-
-        header {
-            margin-bottom: 4rem;
-            animation: fadeUp 0.6s ease both;
-        }
-
-        .eyebrow {
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 0.75rem;
-        }
-
-        h1 {
-            font-family: 'Fraunces', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 300;
-            line-height: 1.1;
-            color: var(--text);
-        }
-
+        body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+        .container { position: relative; z-index: 1; width: 100%; max-width: 720px; }
+        header { margin-bottom: 4rem; animation: fadeUp 0.6s ease both; }
+        .eyebrow { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+        h1 { font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; line-height: 1.1; color: var(--text); }
         h1 em { font-style: italic; font-weight: 300; }
-
-        .subtitle {
-            margin-top: 1rem;
-            font-size: 0.75rem;
-            color: var(--muted);
-            letter-spacing: 0.05em;
-        }
-
-        .apps {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .app-card {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 1.75rem 2rem;
-            background: var(--surface);
-            text-decoration: none;
-            color: var(--text);
-            transition: background 0.15s ease;
-            position: relative;
-            animation: fadeUp 0.6s ease both;
-        }
-
-        .app-card:nth-child(1)  { animation-delay: 0.10s; }
-        .app-card:nth-child(2)  { animation-delay: 0.18s; }
-        .app-card:nth-child(3)  { animation-delay: 0.26s; }
-        .app-card:nth-child(4)  { animation-delay: 0.34s; }
-
-        .app-card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 3px;
-            background: var(--accent);
-            opacity: 0;
-            transition: opacity 0.15s ease;
-        }
-
+        .subtitle { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+        .apps { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+        .app-card { display: flex; align-items: center; gap: 1.5rem; padding: 1.75rem 2rem; background: var(--surface); text-decoration: none; color: var(--text); transition: background 0.15s ease; position: relative; animation: fadeUp 0.6s ease both; }
+        .app-card:nth-child(1) { animation-delay: 0.10s; }
+        .app-card:nth-child(2) { animation-delay: 0.18s; }
+        .app-card:nth-child(3) { animation-delay: 0.26s; }
+        .app-card:nth-child(4) { animation-delay: 0.34s; }
+        .app-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); opacity: 0; transition: opacity 0.15s ease; }
         .app-card:hover { background: #1c1e1e; }
         .app-card:hover::before { opacity: 1; }
         .app-card:hover .arrow { transform: translateX(4px); opacity: 1; }
-
-        .icon {
-            width: 42px; height: 42px;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-            background: color-mix(in srgb, var(--accent) 12%, transparent);
-            border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-            color: var(--accent);
-        }
-
+        .icon { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent); }
         .app-info { flex: 1; }
-
-        .app-name {
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            margin-bottom: 0.25rem;
-        }
-
+        .app-name { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; margin-bottom: 0.25rem; }
         .app-desc { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.03em; }
-
         .app-meta { display: flex; align-items: center; gap: 1rem; }
+        .tag { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 2px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+        .arrow { font-size: 0.8rem; color: var(--muted); opacity: 0.4; transition: transform 0.15s ease, opacity 0.15s ease; }
+        footer { margin-top: 3rem; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; animation: fadeUp 0.6s 0.5s ease both; display: flex; align-items: center; justify-content: space-between; }
+        .cert-footer-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 2px; padding: 0.3rem 0.7rem; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+        .cert-footer-btn:hover { color: var(--text); border-color: #444; }
 
-        .tag {
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 0.2rem 0.5rem;
-            border-radius: 2px;
-            background: color-mix(in srgb, var(--accent) 10%, transparent);
-            color: var(--accent);
-            border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-        }
+        /* CERT MODAL — hidden by default */
+        #cert-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+        #cert-overlay.visible { display: flex; animation: fadeIn 0.3s ease both; }
+        #cert-overlay.hiding { display: flex; animation: fadeOut 0.3s ease both; pointer-events: none; }
+        #cert-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2.5rem; max-width: 540px; width: 100%; position: relative; animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) both; max-height: 90vh; overflow-y: auto; }
+        #cert-overlay.hiding #cert-modal { animation: slideDown 0.3s ease both; }
 
-        .arrow {
-            font-size: 0.8rem;
-            color: var(--muted);
-            opacity: 0.4;
-            transition: transform 0.15s ease, opacity 0.15s ease;
-        }
-
-        footer {
-            margin-top: 3rem;
-            font-size: 0.65rem;
-            color: var(--muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            animation: fadeUp 0.6s 0.5s ease both;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Small cert button in footer */
-        .cert-footer-btn {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--muted);
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 0.3rem 0.7rem;
-            cursor: pointer;
-            transition: color 0.15s, border-color 0.15s;
-        }
-
-        .cert-footer-btn:hover {
-            color: var(--text);
-            border-color: #444;
-        }
-
-        /* ── CERT MODAL ───────────────────────────────────────────── */
-        #cert-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            animation: fadeIn 0.3s ease both;
-        }
-
-        #cert-overlay.hidden {
-            animation: fadeOut 0.3s ease both;
-            pointer-events: none;
-        }
-
-        #cert-modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 2.5rem;
-            max-width: 540px;
-            width: 100%;
-            position: relative;
-            animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) both;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        #cert-overlay.hidden #cert-modal {
-            animation: slideDown 0.3s ease both;
-        }
-
-        .modal-eyebrow {
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #f97316;
-            margin-bottom: 1rem;
-        }
-
-        .modal-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.6rem;
-            font-weight: 300;
-            line-height: 1.2;
-            margin-bottom: 0.75rem;
-        }
-
+        .modal-eyebrow { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #f97316; margin-bottom: 1rem; }
+        .modal-title { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 300; line-height: 1.2; margin-bottom: 0.75rem; }
         .modal-title em { font-style: italic; }
+        .modal-body { font-size: 0.75rem; color: var(--muted); line-height: 1.7; letter-spacing: 0.02em; margin-bottom: 1.5rem; }
 
-        .modal-body {
-            font-size: 0.75rem;
-            color: var(--muted);
-            line-height: 1.7;
-            letter-spacing: 0.02em;
-            margin-bottom: 1.5rem;
-        }
-
-        /* OS Tab selector */
-        .os-tabs {
-            display: flex;
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .os-tab {
-            flex: 1;
-            padding: 0.6rem 0.4rem;
-            font-family: 'DM Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            background: var(--bg);
-            color: var(--muted);
-            border: none;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-        }
-
-        .os-tab.active {
-            background: var(--border);
-            color: var(--text);
-        }
-
-        .os-tab:hover:not(.active) {
-            background: #1a1c1c;
-            color: #999;
-        }
-
+        .os-tabs { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 1.5rem; }
+        .os-tab { flex: 1; padding: 0.6rem 0.4rem; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--bg); color: var(--muted); border: none; cursor: pointer; transition: background 0.15s, color 0.15s; }
+        .os-tab.active { background: var(--border); color: var(--text); }
+        .os-tab:hover:not(.active) { background: #1a1c1c; color: #999; }
         .os-panel { display: none; }
         .os-panel.active { display: block; }
 
-        /* Download button */
-        .dl-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 1rem 1.25rem;
-            background: color-mix(in srgb, #f97316 10%, transparent);
-            border: 1px solid color-mix(in srgb, #f97316 30%, transparent);
-            border-radius: 3px;
-            color: #f97316;
-            font-family: 'DM Mono', monospace;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.15s, border-color 0.15s;
-            margin-bottom: 1.5rem;
-        }
+        .dl-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 1rem 1.25rem; background: color-mix(in srgb, #f97316 10%, transparent); border: 1px solid color-mix(in srgb, #f97316 30%, transparent); border-radius: 3px; color: #f97316; font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 0.05em; cursor: pointer; text-decoration: none; transition: background 0.15s, border-color 0.15s; margin-bottom: 1.5rem; }
+        .dl-btn:hover { background: color-mix(in srgb, #f97316 18%, transparent); border-color: color-mix(in srgb, #f97316 50%, transparent); }
 
-        .dl-btn:hover {
-            background: color-mix(in srgb, #f97316 18%, transparent);
-            border-color: color-mix(in srgb, #f97316 50%, transparent);
-        }
-
-        /* Steps — plain language, larger text */
-        .steps {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-bottom: 1rem;
-        }
-
-        .steps li {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            padding: 0.85rem 0;
-            border-bottom: 1px solid #1e2020;
-            font-size: 0.78rem;
-            line-height: 1.6;
-            color: var(--text);
-        }
-
+        .steps { list-style: none; display: flex; flex-direction: column; gap: 0; margin-bottom: 1rem; }
+        .steps li { display: flex; gap: 1rem; align-items: flex-start; padding: 0.85rem 0; border-bottom: 1px solid #1e2020; font-size: 0.78rem; line-height: 1.6; color: var(--text); }
         .steps li:last-child { border-bottom: none; }
-
-        .step-num {
-            font-size: 0.65rem;
-            color: #f97316;
-            flex-shrink: 0;
-            width: 1.4rem;
-            padding-top: 0.15rem;
-        }
-
+        .step-num { font-size: 0.65rem; color: #f97316; flex-shrink: 0; width: 1.4rem; padding-top: 0.15rem; }
         .step-text { flex: 1; }
+        .ui { color: #e8e4dc; font-weight: 500; }
+        .tip { font-size: 0.68rem; color: var(--muted); line-height: 1.6; padding: 0.75rem 1rem; border-left: 2px solid var(--border); margin-top: 0.5rem; margin-bottom: 1rem; }
 
-        /* Simpler highlight for UI element names */
-        .ui { 
-            color: #e8e4dc;
-            font-weight: 500;
-        }
-
-        .tip {
-            font-size: 0.68rem;
-            color: var(--muted);
-            line-height: 1.6;
-            padding: 0.75rem 1rem;
-            border-left: 2px solid var(--border);
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 1.5rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .skip-link {
-            font-size: 0.62rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--muted);
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: 'DM Mono', monospace;
-            transition: color 0.15s;
-        }
-
+        .modal-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+        .skip-link { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; background: none; border: none; font-family: 'DM Mono', monospace; transition: color 0.15s; }
         .skip-link:hover { color: var(--text); }
-
-        .done-btn {
-            padding: 0.6rem 1.25rem;
-            background: var(--border);
-            border: 1px solid #333;
-            border-radius: 3px;
-            color: var(--text);
-            font-family: 'DM Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-
+        .done-btn { padding: 0.6rem 1.25rem; background: var(--border); border: 1px solid #333; border-radius: 3px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.15s; }
         .done-btn:hover { background: #2a2d2d; }
 
         @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideDown {
-            from { opacity: 1; transform: translateY(0); }
-            to   { opacity: 0; transform: translateY(12px); }
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(12px); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- ── CERT MODAL ───────────────────────────────────────────── -->
-    <div id="cert-overlay">
-        <div id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
-
+    <!-- CERT MODAL -->
+    <div id="cert-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+        <div id="cert-modal">
             <p class="modal-eyebrow">// one-time setup</p>
             <h2 class="modal-title" id="modal-heading">Fix the browser<br><em>security warning.</em></h2>
-            <p class="modal-body">
-                Before you use this network you need to install a security certificate.
-                This is a one-time step — once done your browser will trust all the local apps without any warnings.
-            </p>
+            <p class="modal-body">Before you use this network you need to install a security certificate. This is a one-time step — once done your browser will trust all the local apps without any warnings.</p>
 
             <div class="os-tabs" role="tablist">
                 <button class="os-tab" data-os="windows" role="tab">Windows</button>
@@ -482,143 +110,68 @@
 
             <!-- Windows -->
             <div class="os-panel" data-panel="windows">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">
-                    Step 1 — Download the certificate file &nbsp;↓
-                </a>
+                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li>
-                        <span class="step-num">2</span>
-                        <span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file you just downloaded.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">3</span>
-                        <span class="step-text">A window will appear. Click <span class="ui">Install Certificate…</span></span>
-                    </li>
-                    <li>
-                        <span class="step-num">4</span>
-                        <span class="step-text">Select <span class="ui">Local Machine</span> then click Next. If Windows asks for permission, click Yes.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">5</span>
-                        <span class="step-text">Choose <span class="ui">Place all certificates in the following store</span>, then click <span class="ui">Browse</span> and select <span class="ui">Trusted Root Certification Authorities</span>.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">6</span>
-                        <span class="step-text">Click <span class="ui">Next</span> then <span class="ui">Finish</span>. You're done — close and reopen your browser.</span>
-                    </li>
+                    <li><span class="step-num">2</span><span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file you just downloaded.</span></li>
+                    <li><span class="step-num">3</span><span class="step-text">A window will appear. Click <span class="ui">Install Certificate…</span></span></li>
+                    <li><span class="step-num">4</span><span class="step-text">Select <span class="ui">Local Machine</span> then click Next. If Windows asks for permission, click Yes.</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Choose <span class="ui">Place all certificates in the following store</span>, then click <span class="ui">Browse</span> and select <span class="ui">Trusted Root Certification Authorities</span>.</span></li>
+                    <li><span class="step-num">6</span><span class="step-text">Click <span class="ui">Next</span> then <span class="ui">Finish</span>. You're done — close and reopen your browser.</span></li>
                 </ul>
             </div>
 
             <!-- macOS -->
             <div class="os-panel" data-panel="macos">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">
-                    Step 1 — Download the certificate file &nbsp;↓
-                </a>
+                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li>
-                        <span class="step-num">2</span>
-                        <span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file. An app called Keychain Access will open.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">3</span>
-                        <span class="step-text">Find <span class="ui">Hippity Internal CA</span> in the list and double-click it.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">4</span>
-                        <span class="step-text">Click the arrow next to <span class="ui">Trust</span> to expand it, then change <span class="ui">When using this certificate</span> to <span class="ui">Always Trust</span>.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">5</span>
-                        <span class="step-text">Close the window. Mac will ask for your password — enter it and click <span class="ui">Update Settings</span>. Done.</span>
-                    </li>
+                    <li><span class="step-num">2</span><span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file. An app called Keychain Access will open.</span></li>
+                    <li><span class="step-num">3</span><span class="step-text">Find <span class="ui">Hippity Internal CA</span> in the list and double-click it.</span></li>
+                    <li><span class="step-num">4</span><span class="step-text">Click the arrow next to <span class="ui">Trust</span> to expand it, then change <span class="ui">When using this certificate</span> to <span class="ui">Always Trust</span>.</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Close the window. Mac will ask for your password — enter it and click <span class="ui">Update Settings</span>. Done.</span></li>
                 </ul>
             </div>
 
             <!-- iOS -->
             <div class="os-panel" data-panel="ios">
-                <a class="dl-btn" href="/ca.crt">
-                    Step 1 — Download the certificate file &nbsp;↓
-                </a>
+                <a class="dl-btn" href="/ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li>
-                        <span class="step-num">2</span>
-                        <span class="step-text">Your phone will say <span class="ui">"Profile Downloaded"</span> at the top of the screen. Open the <span class="ui">Settings</span> app.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">3</span>
-                        <span class="step-text">Near the top of Settings you'll see a new option — <span class="ui">Profile Downloaded</span>. Tap it, then tap <span class="ui">Install</span> and enter your passcode.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">4</span>
-                        <span class="step-text">Go back to <span class="ui">Settings → General → About → Certificate Trust Settings</span> (scroll to the very bottom of About).</span>
-                    </li>
-                    <li>
-                        <span class="step-num">5</span>
-                        <span class="step-text">Turn on the switch next to <span class="ui">Hippity Internal CA</span>. Tap <span class="ui">Continue</span> to confirm. Done.</span>
-                    </li>
+                    <li><span class="step-num">2</span><span class="step-text">Your phone will say <span class="ui">"Profile Downloaded"</span> at the top of the screen. Open the <span class="ui">Settings</span> app.</span></li>
+                    <li><span class="step-num">3</span><span class="step-text">Near the top of Settings you'll see a new option — <span class="ui">Profile Downloaded</span>. Tap it, then tap <span class="ui">Install</span> and enter your passcode.</span></li>
+                    <li><span class="step-num">4</span><span class="step-text">Go back to <span class="ui">Settings → General → About → Certificate Trust Settings</span> (scroll to the very bottom of About).</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Turn on the switch next to <span class="ui">Hippity Internal CA</span>. Tap <span class="ui">Continue</span> to confirm. Done.</span></li>
                 </ul>
             </div>
 
             <!-- Android -->
             <div class="os-panel" data-panel="android">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">
-                    Step 1 — Download the certificate file &nbsp;↓
-                </a>
+                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li>
-                        <span class="step-num">2</span>
-                        <span class="step-text">Open the <span class="ui">Settings</span> app and search for <span class="ui">certificates</span> in the search bar at the top.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">3</span>
-                        <span class="step-text">Tap <span class="ui">Install from storage</span> (it may say <span class="ui">Install from device storage</span> or similar).</span>
-                    </li>
-                    <li>
-                        <span class="step-num">4</span>
-                        <span class="step-text">Find and tap the file you downloaded. When asked what it's for, choose <span class="ui">CA Certificate</span>.</span>
-                    </li>
-                    <li>
-                        <span class="step-num">5</span>
-                        <span class="step-text">Give it a name like <span class="ui">Hippity</span> and tap <span class="ui">OK</span>. Done.</span>
-                    </li>
+                    <li><span class="step-num">2</span><span class="step-text">Open the <span class="ui">Settings</span> app and search for <span class="ui">certificates</span> in the search bar at the top.</span></li>
+                    <li><span class="step-num">3</span><span class="step-text">Tap <span class="ui">Install from storage</span> (it may say <span class="ui">Install from device storage</span> or similar).</span></li>
+                    <li><span class="step-num">4</span><span class="step-text">Find and tap the file you downloaded. When asked what it's for, choose <span class="ui">CA Certificate</span>.</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Give it a name like <span class="ui">Hippity</span> and tap <span class="ui">OK</span>. Done.</span></li>
                 </ul>
                 <p class="tip">The exact steps vary a little depending on your phone brand — Samsung, Pixel, and others may look slightly different, but the options will be the same.</p>
             </div>
 
             <!-- Linux -->
             <div class="os-panel" data-panel="linux">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">
-                    Step 1 — Download the certificate file &nbsp;↓
-                </a>
+                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li>
-                        <span class="step-num">2</span>
-                        <span class="step-text">Open a terminal and run:<br><br>
-                            <code>sudo cp ~/Downloads/hippity-ca.crt /usr/local/share/ca-certificates/</code>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="step-num">3</span>
-                        <span class="step-text">Then run:<br><br>
-                            <code>sudo update-ca-certificates</code>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="step-num">4</span>
-                        <span class="step-text">If you use <span class="ui">Firefox</span>, you also need to import it manually: open Firefox, go to <span class="ui">Settings → Privacy &amp; Security → View Certificates → Import</span> and select the file.</span>
-                    </li>
+                    <li><span class="step-num">2</span><span class="step-text">Open a terminal and run:<br><br><code>sudo cp ~/Downloads/hippity-ca.crt /usr/local/share/ca-certificates/</code></span></li>
+                    <li><span class="step-num">3</span><span class="step-text">Then run:<br><br><code>sudo update-ca-certificates</code></span></li>
+                    <li><span class="step-num">4</span><span class="step-text">If you use <span class="ui">Firefox</span>, you also need to import it manually: open Firefox, go to <span class="ui">Settings → Privacy &amp; Security → View Certificates → Import</span> and select the file.</span></li>
                 </ul>
             </div>
 
             <div class="modal-footer">
-                <button class="skip-link" id="skip-btn">Remind me later</button>
+                <button class="skip-link" id="skip-btn">Close</button>
                 <button class="done-btn"  id="done-btn">Done, don't show again →</button>
             </div>
-
         </div>
     </div>
 
-    <!-- ── MAIN PAGE ────────────────────────────────────────────── -->
+    <!-- MAIN PAGE -->
     <div class="container">
         <header>
             <p class="eyebrow">hippity.internal</p>
@@ -629,50 +182,23 @@
         <div class="apps">
             <a href="https://moodle.hippity.internal" class="app-card" data-accent="moodle">
                 <div class="icon">🎓</div>
-                <div class="app-info">
-                    <div class="app-name">Moodle</div>
-                    <div class="app-desc">Learning management system</div>
-                </div>
-                <div class="app-meta">
-                    <span class="tag">LMS</span>
-                    <span class="arrow">→</span>
-                </div>
+                <div class="app-info"><div class="app-name">Moodle</div><div class="app-desc">Learning management system</div></div>
+                <div class="app-meta"><span class="tag">LMS</span><span class="arrow">→</span></div>
             </a>
-
             <a href="https://kiwix.hippity.internal" class="app-card" data-accent="kiwix">
                 <div class="icon">📚</div>
-                <div class="app-info">
-                    <div class="app-name">Kiwix</div>
-                    <div class="app-desc">Offline knowledge library</div>
-                </div>
-                <div class="app-meta">
-                    <span class="tag">Library</span>
-                    <span class="arrow">→</span>
-                </div>
+                <div class="app-info"><div class="app-name">Kiwix</div><div class="app-desc">Offline knowledge library</div></div>
+                <div class="app-meta"><span class="tag">Library</span><span class="arrow">→</span></div>
             </a>
-
             <a href="https://kolibri.hippity.internal" class="app-card" data-accent="kolibri">
                 <div class="icon">🌱</div>
-                <div class="app-info">
-                    <div class="app-name">Kolibri</div>
-                    <div class="app-desc">Educational platform for offline learning</div>
-                </div>
-                <div class="app-meta">
-                    <span class="tag">Education</span>
-                    <span class="arrow">→</span>
-                </div>
+                <div class="app-info"><div class="app-name">Kolibri</div><div class="app-desc">Educational platform for offline learning</div></div>
+                <div class="app-meta"><span class="tag">Education</span><span class="arrow">→</span></div>
             </a>
-
             <a href="https://filebrowser.hippity.internal" class="app-card" data-accent="filebrowser">
                 <div class="icon">📁</div>
-                <div class="app-info">
-                    <div class="app-name">File Browser</div>
-                    <div class="app-desc">Browse and manage files</div>
-                </div>
-                <div class="app-meta">
-                    <span class="tag">Files</span>
-                    <span class="arrow">→</span>
-                </div>
+                <div class="app-info"><div class="app-name">File Browser</div><div class="app-desc">Browse and manage files</div></div>
+                <div class="app-meta"><span class="tag">Files</span><span class="arrow">→</span></div>
             </a>
         </div>
 
@@ -693,44 +219,38 @@
         }
 
         function activateTab(os) {
-            document.querySelectorAll('.os-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.os === os);
-            });
-            document.querySelectorAll('.os-panel').forEach(p => {
-                p.classList.toggle('active', p.dataset.panel === os);
-            });
+            document.querySelectorAll('.os-tab').forEach(t => t.classList.toggle('active', t.dataset.os === os));
+            document.querySelectorAll('.os-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === os));
         }
 
         document.querySelectorAll('.os-tab').forEach(tab => {
             tab.addEventListener('click', () => activateTab(tab.dataset.os));
         });
 
-        const overlay     = document.getElementById('cert-overlay');
-        const doneBtn     = document.getElementById('done-btn');
-        const skipBtn     = document.getElementById('skip-btn');
-        const openBtn     = document.getElementById('cert-open-btn');
-        const STORE_KEY   = 'hippity_cert_ack';
+        const overlay   = document.getElementById('cert-overlay');
+        const doneBtn   = document.getElementById('done-btn');
+        const skipBtn   = document.getElementById('skip-btn');
+        const openBtn   = document.getElementById('cert-open-btn');
+        const STORE_KEY = 'hippity_cert_ack';
 
         function showModal() {
-            overlay.style.display = 'flex';
-            overlay.classList.remove('hidden');
+            overlay.classList.remove('hiding');
+            overlay.classList.add('visible');
         }
 
         function dismissModal(permanent) {
             if (permanent) localStorage.setItem(STORE_KEY, '1');
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.style.display = 'none', 320);
+            overlay.classList.add('hiding');
+            setTimeout(() => overlay.classList.remove('visible', 'hiding'), 320);
         }
 
         doneBtn.addEventListener('click', () => dismissModal(true));
         skipBtn.addEventListener('click', () => dismissModal(false));
         openBtn.addEventListener('click', showModal);
 
+        // On load: just set the correct OS tab, never auto-open the modal
         window.addEventListener('DOMContentLoaded', () => {
             activateTab(detectOS());
-            if (localStorage.getItem(STORE_KEY)) {
-                overlay.style.display = 'none';
-            }
         });
     </script>
 </body>
