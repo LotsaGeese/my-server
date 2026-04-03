@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hippity.internal</title>
+    <title>ktf.internal</title>
     <style>
         @font-face { font-family: 'DM Mono'; src: url('/fonts/DMMono-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; }
         @font-face { font-family: 'DM Mono'; src: url('/fonts/DMMono-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; }
@@ -110,7 +110,7 @@
 
             <!-- Windows -->
             <div class="os-panel" data-panel="windows">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
+                <a class="dl-btn" href="/ca.crt" download="ktf-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
                     <li><span class="step-num">2</span><span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file you just downloaded.</span></li>
                     <li><span class="step-num">3</span><span class="step-text">A window will appear. Click <span class="ui">Install Certificate…</span></span></li>
@@ -122,10 +122,10 @@
 
             <!-- macOS -->
             <div class="os-panel" data-panel="macos">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
+                <a class="dl-btn" href="/ca.crt" download="ktf-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
                     <li><span class="step-num">2</span><span class="step-text">Open your <span class="ui">Downloads</span> folder and double-click the file. An app called Keychain Access will open.</span></li>
-                    <li><span class="step-num">3</span><span class="step-text">Find <span class="ui">Hippity Internal CA</span> in the list and double-click it.</span></li>
+                    <li><span class="step-num">3</span><span class="step-text">Find <span class="ui">ktf Internal CA</span> in the list and double-click it.</span></li>
                     <li><span class="step-num">4</span><span class="step-text">Click the arrow next to <span class="ui">Trust</span> to expand it, then change <span class="ui">When using this certificate</span> to <span class="ui">Always Trust</span>.</span></li>
                     <li><span class="step-num">5</span><span class="step-text">Close the window. Mac will ask for your password — enter it and click <span class="ui">Update Settings</span>. Done.</span></li>
                 </ul>
@@ -138,27 +138,27 @@
                     <li><span class="step-num">2</span><span class="step-text">Your phone will say <span class="ui">"Profile Downloaded"</span> at the top of the screen. Open the <span class="ui">Settings</span> app.</span></li>
                     <li><span class="step-num">3</span><span class="step-text">Near the top of Settings you'll see a new option — <span class="ui">Profile Downloaded</span>. Tap it, then tap <span class="ui">Install</span> and enter your passcode.</span></li>
                     <li><span class="step-num">4</span><span class="step-text">Go back to <span class="ui">Settings → General → About → Certificate Trust Settings</span> (scroll to the very bottom of About).</span></li>
-                    <li><span class="step-num">5</span><span class="step-text">Turn on the switch next to <span class="ui">Hippity Internal CA</span>. Tap <span class="ui">Continue</span> to confirm. Done.</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Turn on the switch next to <span class="ui">ktf Internal CA</span>. Tap <span class="ui">Continue</span> to confirm. Done.</span></li>
                 </ul>
             </div>
 
             <!-- Android -->
             <div class="os-panel" data-panel="android">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
+                <a class="dl-btn" href="/ca.crt" download="ktf-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
                     <li><span class="step-num">2</span><span class="step-text">Open the <span class="ui">Settings</span> app and search for <span class="ui">certificates</span> in the search bar at the top.</span></li>
                     <li><span class="step-num">3</span><span class="step-text">Tap <span class="ui">Install from storage</span> (it may say <span class="ui">Install from device storage</span> or similar).</span></li>
                     <li><span class="step-num">4</span><span class="step-text">Find and tap the file you downloaded. When asked what it's for, choose <span class="ui">CA Certificate</span>.</span></li>
-                    <li><span class="step-num">5</span><span class="step-text">Give it a name like <span class="ui">Hippity</span> and tap <span class="ui">OK</span>. Done.</span></li>
+                    <li><span class="step-num">5</span><span class="step-text">Give it a name like <span class="ui">ktf</span> and tap <span class="ui">OK</span>. Done.</span></li>
                 </ul>
                 <p class="tip">The exact steps vary a little depending on your phone brand — Samsung, Pixel, and others may look slightly different, but the options will be the same.</p>
             </div>
 
             <!-- Linux -->
             <div class="os-panel" data-panel="linux">
-                <a class="dl-btn" href="/ca.crt" download="hippity-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
+                <a class="dl-btn" href="/ca.crt" download="ktf-ca.crt">Step 1 — Download the certificate file &nbsp;↓</a>
                 <ul class="steps">
-                    <li><span class="step-num">2</span><span class="step-text">Open a terminal and run:<br><br><code>sudo cp ~/Downloads/hippity-ca.crt /usr/local/share/ca-certificates/</code></span></li>
+                    <li><span class="step-num">2</span><span class="step-text">Open a terminal and run:<br><br><code>sudo cp ~/Downloads/ktf-ca.crt /usr/local/share/ca-certificates/</code></span></li>
                     <li><span class="step-num">3</span><span class="step-text">Then run:<br><br><code>sudo update-ca-certificates</code></span></li>
                     <li><span class="step-num">4</span><span class="step-text">If you use <span class="ui">Firefox</span>, you also need to import it manually: open Firefox, go to <span class="ui">Settings → Privacy &amp; Security → View Certificates → Import</span> and select the file.</span></li>
                 </ul>
@@ -174,28 +174,28 @@
     <!-- MAIN PAGE -->
     <div class="container">
         <header>
-            <p class="eyebrow">hippity.internal</p>
+            <p class="eyebrow">ktf.internal</p>
             <h1>Your <em>local</em><br>server.</h1>
             <p class="subtitle">// select an application to continue</p>
         </header>
 
         <div class="apps">
-            <a href="https://moodle.hippity.internal" class="app-card" data-accent="moodle">
+            <a href="https://moodle.ktf.internal" class="app-card" data-accent="moodle">
                 <div class="icon">🎓</div>
                 <div class="app-info"><div class="app-name">Moodle</div><div class="app-desc">Learning management system</div></div>
                 <div class="app-meta"><span class="tag">LMS</span><span class="arrow">→</span></div>
             </a>
-            <a href="https://kiwix.hippity.internal" class="app-card" data-accent="kiwix">
+            <a href="https://kiwix.ktf.internal" class="app-card" data-accent="kiwix">
                 <div class="icon">📚</div>
                 <div class="app-info"><div class="app-name">Kiwix</div><div class="app-desc">Offline knowledge library</div></div>
                 <div class="app-meta"><span class="tag">Library</span><span class="arrow">→</span></div>
             </a>
-            <a href="https://kolibri.hippity.internal" class="app-card" data-accent="kolibri">
+            <a href="https://kolibri.ktf.internal" class="app-card" data-accent="kolibri">
                 <div class="icon">🌱</div>
                 <div class="app-info"><div class="app-name">Kolibri</div><div class="app-desc">Educational platform for offline learning</div></div>
                 <div class="app-meta"><span class="tag">Education</span><span class="arrow">→</span></div>
             </a>
-            <a href="https://filebrowser.hippity.internal" class="app-card" data-accent="filebrowser">
+            <a href="https://filebrowser.ktf.internal" class="app-card" data-accent="filebrowser">
                 <div class="icon">📁</div>
                 <div class="app-info"><div class="app-name">File Browser</div><div class="app-desc">Browse and manage files</div></div>
                 <div class="app-meta"><span class="tag">Files</span><span class="arrow">→</span></div>

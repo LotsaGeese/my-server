@@ -6,7 +6,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-DOMAIN="hippity.internal"
+DOMAIN="ktf.internal"
 WILDCARD="*.$DOMAIN"
 
 # Work in a temp directory so generated files don't litter anywhere
@@ -21,7 +21,7 @@ echo "Creating local Certificate Authority..."
 openssl genrsa -out "$WORK_DIR/hippityCA.key" 4096
 openssl req -x509 -new -nodes -key "$WORK_DIR/hippityCA.key" -sha256 -days 3650 \
   -out "$WORK_DIR/hippityCA.pem" \
-  -subj "/C=AU/ST=SA/L=Adelaide/O=Kokota/CN=Hippity Internal CA"
+  -subj "/C=AU/ST=SA/L=Adelaide/O=Kokota/CN=ktf Internal CA"
 
 echo "Creating wildcard certificate key..."
 openssl genrsa -out "$WORK_DIR/wildcard.$DOMAIN.key" 2048

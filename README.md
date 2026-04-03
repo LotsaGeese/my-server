@@ -1,8 +1,8 @@
-# Hippity Internal Server
+# ktf Internal Server
 
 A self-contained server stack for remote and rural communities, providing educational tools and reference resources over a local network — no internet connection required once deployed.
 
-All services are accessible through a central homepage at `https://hippity.internal`.
+All services are accessible through a central homepage at `https://ktf.internal`.
 
 ---
 
@@ -24,9 +24,9 @@ All services are accessible through a central homepage at `https://hippity.inter
 
 ## Overview
 
-Once set up, this server runs entirely offline. Community members connect to the local network and visit `https://hippity.internal` in their browser to access all available tools.
+Once set up, this server runs entirely offline. Community members connect to the local network and visit `https://ktf.internal` in their browser to access all available tools.
 
-The stack handles its own DNS (so `hippity.internal` resolves on the local network), HTTPS (so connections are secure), and routing (so each service lives at its own subdomain).
+The stack handles its own DNS (so `ktf.internal` resolves on the local network), HTTPS (so connections are secure), and routing (so each service lives at its own subdomain).
 
 **Key points:**
 - All services run as Docker containers and are managed together via Docker Compose
@@ -40,15 +40,15 @@ The stack handles its own DNS (so `hippity.internal` resolves on the local netwo
 ```
 Community Devices
     |
-    |---> 192.168.0.201:53 (DNS) ---> resolves *.hippity.internal -> this server
+    |---> 192.168.0.201:53 (DNS) ---> resolves *.ktf.internal -> this server
     |
     └---> server:443 / server:80 (SWAG reverse proxy)
               |
-              |---> hippity.internal              -> Homepage
-              |---> kolibri.hippity.internal      -> Kolibri
-              |---> kiwix.hippity.internal        -> Kiwix
-              |---> moodle.hippity.internal       -> Moodle
-              └---> portainer.hippity.internal    -> Portainer (admin only)
+              |---> ktf.internal              -> Homepage
+              |---> kolibri.ktf.internal      -> Kolibri
+              |---> kiwix.ktf.internal        -> Kiwix
+              |---> moodle.ktf.internal       -> Moodle
+              └---> portainer.ktf.internal    -> Portainer (admin only)
 ```
 
 The DNS container sits directly on the LAN with its own IP address. All other services are on a private internal network and are only reachable through the reverse proxy.
@@ -58,12 +58,12 @@ The DNS container sits directly on the LAN with its own IP address. All other se
 ## Services
 
 ### Homepage
-A static landing page at `https://hippity.internal` with links to all services. Edit `./proxy/data/www/index.html` to update it.
+A static landing page at `https://ktf.internal` with links to all services. Edit `./proxy/data/www/index.html` to update it.
 
 ---
 
 ### DNS
-Resolves `*.hippity.internal` for devices on the local network. Runs on the LAN at `192.168.0.201`. Built from a custom dnsmasq image — config is in `./DNS/dnsmasq.conf`.
+Resolves `*.ktf.internal` for devices on the local network. Runs on the LAN at `192.168.0.201`. Built from a custom dnsmasq image — config is in `./DNS/dnsmasq.conf`.
 
 > To rebuild the DNS image you need a network connection that does **not** route through this server's DNS. Comment in the `build:` block in `docker-compose.yml` when needed. Note there is also a commented-out section in the compose file for use when there is no internet, but this requires the image to already be present on the machine.
 
@@ -90,7 +90,7 @@ Full learning management system for structured courses, quizzes, and assignments
 ---
 
 ### Portainer
-Web UI for managing the Docker stack. Intended for admins only. Accessible at `https://portainer.hippity.internal` or directly at `https://<server-ip>:9443`.
+Web UI for managing the Docker stack. Intended for admins only. Accessible at `https://portainer.ktf.internal` or directly at `https://<server-ip>:9443`.
 
 ---
 
@@ -143,7 +143,7 @@ Then fill in the remaining values — database credentials, Moodle admin details
 
 ### 3. Generate HTTPS certificates
 
-Run once before starting the stack. Creates a local CA and wildcard certificate for `*.hippity.internal`.
+Run once before starting the stack. Creates a local CA and wildcard certificate for `*.ktf.internal`.
 
 ```bash
 bash scripts/setup_certs.sh
@@ -153,7 +153,7 @@ Keep a copy of `hippityCA.pem` before the script cleans it up — you will need 
 
 ### 4. Fix host-side networking (recommended)
 
-By default, the Linux host cannot reach its own macvlan containers. This script creates a shim interface so the server itself can resolve `hippity.internal`.
+By default, the Linux host cannot reach its own macvlan containers. This script creates a shim interface so the server itself can resolve `ktf.internal`.
 
 ```bash
 bash scripts/Fix_internal_networking.sh
@@ -181,7 +181,7 @@ docker compose logs -f moodle
 
 ### 7. Configure the router
 
-Set the primary DNS in your router's DHCP settings to `192.168.0.201`. During development this was done on a TP-Link router via the DHCP configuration page. Once set, any device that joins the network will automatically resolve `hippity.internal`.
+Set the primary DNS in your router's DHCP settings to `192.168.0.201`. During development this was done on a TP-Link router via the DHCP configuration page. Once set, any device that joins the network will automatically resolve `ktf.internal`.
 
 ---
 
@@ -209,7 +209,7 @@ Kiwix will automatically serve any `.zim` file in that folder.
 Kolibri content can be loaded either through the web UI or via USB drives.
 
 **Via the web UI (requires internet on the server):**
-1. Go to `https://kolibri.hippity.internal`
+1. Go to `https://kolibri.ktf.internal`
 2. Sign in as admin
 3. Navigate to Device > Channels > Import
 4. Search for and import channels
@@ -225,7 +225,7 @@ Kolibri content can be loaded either through the web UI or via USB drives.
 ## Scripts
 
 ### `scripts/Fix_internal_networking.sh`
-Creates a `macvlan-shim` network interface on the host so the server itself can reach the DNS container at `192.168.0.201`. Without this, only LAN clients can resolve `hippity.internal` — the server itself cannot. Also configures `systemd-resolved` to use the internal DNS with `8.8.8.8` / `1.1.1.1` as fallback. The shim persists across reboots via `systemd-networkd`.
+Creates a `macvlan-shim` network interface on the host so the server itself can reach the DNS container at `192.168.0.201`. Without this, only LAN clients can resolve `ktf.internal` — the server itself cannot. Also configures `systemd-resolved` to use the internal DNS with `8.8.8.8` / `1.1.1.1` as fallback. The shim persists across reboots via `systemd-networkd`.
 
 ```bash
 bash scripts/Fix_internal_networking.sh
@@ -234,7 +234,7 @@ bash scripts/Fix_internal_networking.sh
 ---
 
 ### `scripts/setup_certs.sh`
-Generates a local Certificate Authority and a wildcard TLS certificate for `*.hippity.internal`, then installs them where SWAG expects them. The CA key and cert are cleaned up at the end — keep a copy of `hippityCA.pem` if you need to trust the cert on client devices later. The signed certificate is valid for 825 days (the maximum most browsers accept).
+Generates a local Certificate Authority and a wildcard TLS certificate for `*.ktf.internal`, then installs them where SWAG expects them. The CA key and cert are cleaned up at the end — keep a copy of `hippityCA.pem` if you need to trust the cert on client devices later. The signed certificate is valid for 825 days (the maximum most browsers accept).
 
 ```bash
 bash scripts/setup_certs.sh
@@ -260,7 +260,7 @@ Copy `.env.example` to `.env` and fill in the values below.
 | `TZ` | Timezone | `Australia/Adelaide` |
 | `PUID` | User ID for SWAG process | `1000` |
 | `PGID` | Group ID for SWAG process | `1000` |
-| `DOMAIN` | Internal domain | `hippity.internal` |
+| `DOMAIN` | Internal domain | `ktf.internal` |
 | `DNS_IP` | Fixed LAN IP for DNS container | `192.168.0.201` |
 | `PARENT_INTERFACE` | Host network interface for macvlan | `enp2s0` |
 | `SUBNET` | LAN subnet | `192.168.0.0/24` |
@@ -271,7 +271,7 @@ Copy `.env.example` to `.env` and fill in the values below.
 | `MARIADB_DATABASE` | Moodle database name | *(set in .env)* |
 | `MOODLE_USERNAME` | Moodle admin username | *(set in .env)* |
 | `MOODLE_PASSWORD` | Moodle admin password | *(set in .env)* |
-| `MOODLE_HOST` | Moodle public hostname + port | `moodle.hippity.internal:443` |
+| `MOODLE_HOST` | Moodle public hostname + port | `moodle.ktf.internal:443` |
 
 ---
 
@@ -279,11 +279,11 @@ Copy `.env.example` to `.env` and fill in the values below.
 
 | Service | URL |
 |---|---|
-| Homepage | `https://hippity.internal` |
-| Moodle (LMS) | `https://moodle.hippity.internal` |
-| Kolibri | `https://kolibri.hippity.internal` |
-| Kiwix | `https://kiwix.hippity.internal` |
-| Portainer (admin) | `https://portainer.hippity.internal` |
+| Homepage | `https://ktf.internal` |
+| Moodle (LMS) | `https://moodle.ktf.internal` |
+| Kolibri | `https://kolibri.ktf.internal` |
+| Kiwix | `https://kiwix.ktf.internal` |
+| Portainer (admin) | `https://portainer.ktf.internal` |
 
 Browsers will show a certificate warning on first visit. Click **Advanced > Proceed** (or equivalent in your browser) to continue. This is expected and safe — the server uses a self-signed certificate that browsers don't recognise by default.
 
@@ -317,10 +317,10 @@ docker compose ps
 
 ## Troubleshooting
 
-**DNS not resolving `hippity.internal`**
+**DNS not resolving `ktf.internal`**
 - Confirm the device is using `192.168.0.201` as its DNS server
 - Check the DNS container is healthy: `docker compose ps dns`
-- Test directly: `nslookup hippity.internal 192.168.0.201`
+- Test directly: `nslookup ktf.internal 192.168.0.201`
 
 **Host machine cannot reach the DNS container**
 - Expected on Linux with macvlan — run `bash scripts/Fix_internal_networking.sh`

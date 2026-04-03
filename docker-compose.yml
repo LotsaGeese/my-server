@@ -14,11 +14,11 @@ services:
       dns_net:
         ipv4_address: ${DNS_IP}
     healthcheck:
-      test: ["CMD", "nslookup", "hippity.internal", "127.0.0.1"]
+      test: ["CMD-SHELL", "nslookup ktf.internal 127.0.0.1 || exit 1"]
       interval: 30s
       timeout: 5s
-      retries: 3
-      start_period: 10s
+      retries: 5
+      start_period: 15s
 
   swag:
     image: lscr.io/linuxserver/swag:latest
@@ -46,6 +46,63 @@ services:
     networks:
       - internal
 
+  mariadb:
+    image: bitnami/mariadb:latest
+    container_name: mariadb_moodle
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_COLLATE=utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+      - ./moodle/my_custom.cnf:/opt/bitnami/mariadb/conf/bitnami/my_custom.cnf:ro
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+      
+  moodle:
+    image: bitnami/moodle:latest
+    container_name: moodle
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb_moodle
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_NAME=${MARIADB_DATABASE}
+      - MOODLE_DATABASE_USER=${MARIADB_USER}
+      - MOODLE_DATABASE_PASSWORD=${MARIADB_PASSWORD}
+      - MOODLE_USERNAME=${MOODLE_USERNAME}
+      - MOODLE_PASSWORD=${MOODLE_PASSWORD}
+      - MOODLE_REVERSEPROXY=yes
+      - MOODLE_SSLPROXY=yes
+      #- MOODLE_PROXY_WHITELIST=172.16.0.0/12
+      - MOODLE_SITE_NAME=${MOODLE_SITE_NAME}
+      - MOODLE_EMAIL=${MOODLE_EMAIL}
+      #- BITNAMI_DEBUG=true   
+      - MOODLE_HOST=moodle.ktf.internal:443
+    volumes:
+      - moodle_data:/bitnami/moodle
+      - moodledata_data:/bitnami/moodledata
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "php", "/opt/bitnami/moodle/admin/cli/checks.php"]
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 300s
 
   kolibri:
     build:
@@ -73,7 +130,7 @@ services:
     container_name: kiwix_test
     restart: unless-stopped
     volumes:
-      - kiwix_data:/data:ro #this only needs to be read only
+      - kiwix_data:/data:ro
     command:
       - '*.zim'
     healthcheck:
@@ -85,57 +142,6 @@ services:
     networks:
       - internal
 
-  moodle_db:
-    image: docker.io/bitnami/mariadb:latest
-    container_name: moodle_db_test
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
-      - MARIADB_DATABASE=${MARIADB_DATABASE}
-    restart: unless-stopped
-    volumes:
-      - mariadb_data:/bitnami/mariadb
-      - ./moodle/my_custom.cnf:/opt/bitnami/mariadb/conf/my_custom.cnf
-    healthcheck:
-      test: ["CMD", "/opt/bitnami/mariadb/bin/mariadb-admin", "ping", "-u", "bn_moodle", "-pbitnami", "-h", "127.0.0.1", "--ssl=FALSE"]
-      interval: 15s
-      timeout: 5s
-      retries: 6
-    networks:
-      - internal
-
-  moodle:
-    image: docker.io/bitnami/moodle:latest
-    container_name: moodle_test
-    restart: unless-stopped
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MOODLE_DATABASE_USER=${MARIADB_USER}
-      - MOODLE_DATABASE_PASSWORD=${MARIADB_PASSWORD}
-      - MOODLE_DATABASE_NAME=${MARIADB_DATABASE}
-      - MOODLE_DATABASE_HOST=moodle_db
-      - BITNAMI_DEBUG=true
-      - MOODLE_USERNAME=${MOODLE_USERNAME}
-      - MOODLE_PASSWORD=${MOODLE_PASSWORD}
-      - MOODLE_REVERSEPROXY=yes
-      - MOODLE_SSLPROXY=yes
-      - MOODLE_HOST=${MOODLE_HOST}
-    healthcheck:
-      test: ["CMD", "php", "/opt/bitnami/moodle/admin/cli/checks.php"]
-      interval: 60s
-      timeout: 20s
-      retries: 3
-      start_period: 300s
-    depends_on:
-      - moodle_db
-    networks:
-      - internal
-    volumes:
-      - moodle_data:/bitnami/moodle
-      - moodledata_data:/bitnami/moodledata
-      - /mnt/usb-drives:/mnt/usb-drives:slave
-
   filebrowser:
     image: filebrowser/filebrowser:s6
     container_name: filebrowser
@@ -145,7 +151,7 @@ services:
     volumes:
       - filebrowser_data:/srv
       - filebrowser_db:/database
-      - filebrowser_config:/config        #
+      - filebrowser_config:/config
       - ./filebrowser/init-users.sh:/custom-cont-init.d/99-init-users.sh
     environment:
       - PUID=${PUID}
@@ -168,27 +174,6 @@ volumes:
       o: bind
       device: ${DATA_PATH}/kolibri
 
-  mariadb_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${DATA_PATH}/mariadb
-
-  moodle_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${DATA_PATH}/moodle
-
-  moodledata_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${DATA_PATH}/moodledata
-
   filebrowser_data:
     driver: local
     driver_opts:
@@ -202,13 +187,34 @@ volumes:
       type: none
       o: bind
       device: ${DATA_PATH}/filebrowser/db
-  
+
   filebrowser_config:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${DATA_PATH}/filebrowser/config
+
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mariadb
+
+  moodle_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/moodle/app
+
+  moodledata_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/moodle/data
 
 networks:
   dns_net:
